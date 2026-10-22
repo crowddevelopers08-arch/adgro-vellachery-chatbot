@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// One row per completed hair transplant consultation form.
+model Lead {
+  id                  String   @id @default(cuid())
+  createdAt           DateTime @default(now())
+  firstName           String
+  lastName            String?
+  phone               String
+  email               String?
+  budget              String
+  planning            String
+  concern             String
+  locationComfortable Boolean
+
+  @@index([createdAt])
+}
