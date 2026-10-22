@@ -14,6 +14,7 @@ model Lead {
   name                String
   phone               String
   email               String?
+  city                String?
   budget              String
   planning            String
   concern             String

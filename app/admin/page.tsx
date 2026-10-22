@@ -83,7 +83,7 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
             <span className={labelClass}>Search</span>
             <span className="relative block">
               <svg viewBox="0 0 24 24" className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 fill-none stroke-ink/40 stroke-2 [stroke-linecap:round]" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
-              <input name="q" defaultValue={filters.q} placeholder="Name, phone or email" className={`${fieldClass} pl-9`} />
+              <input name="q" defaultValue={filters.q} placeholder="Name, phone, email or city" className={`${fieldClass} pl-9`} />
             </span>
           </label>
           {selects.map(select => <label key={select.name} className="w-full sm:w-48">
@@ -107,7 +107,7 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[1100px] text-left text-sm">
               <thead className="bg-ink/[.025] text-xs text-ink/55">
-                <tr>{["Date", "Name", "Phone", "Email", ...questionLabels, "Location"].map(h => <th key={h} className="max-w-[220px] px-4 py-3 align-bottom font-semibold">{h}</th>)}</tr>
+                <tr>{["Date", "Name", "Phone", "Email", "City / Area", ...questionLabels, "Location"].map(h => <th key={h} className="max-w-[220px] px-4 py-3 align-bottom font-semibold">{h}</th>)}</tr>
               </thead>
               <tbody className="divide-y divide-ink/[.06]">
                 {leads.map(lead => <tr key={lead.id} className="align-top transition-colors hover:bg-brand-tint/60">
@@ -118,6 +118,7 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
                   <td className="px-4 py-3.5 font-medium">{lead.name}</td>
                   <td className="px-4 py-3.5 whitespace-nowrap"><a href={`tel:${lead.phone}`} className="font-medium text-brand hover:underline">{lead.phone}</a></td>
                   <td className="px-4 py-3.5">{lead.email ? <a href={`mailto:${lead.email}`} className="hover:text-brand">{lead.email}</a> : <span className="text-ink/30">—</span>}</td>
+                  <td className="px-4 py-3.5">{lead.city ?? <span className="text-ink/30">—</span>}</td>
                   <td className="max-w-[220px] px-4 py-3.5 text-ink/80">{lead.budget}</td>
                   <td className="max-w-[220px] px-4 py-3.5 text-ink/80">{lead.planning}</td>
                   <td className="max-w-[220px] px-4 py-3.5 text-ink/80">{lead.concern}</td>

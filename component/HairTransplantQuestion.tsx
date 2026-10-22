@@ -14,7 +14,14 @@ const images = {
   concerns: { src: "/crown/hair-concerns.jpg", alt: "Doctor assessing and marking a patient's hairline" },
 };
 
-const clinicAddress = "Second Floor, Block No. 20, Sankaran Avenue, Plot No. 31, Pandian St, Indira Gandhi Nagar, Velachery, Chennai 600042";
+const clinicGallery = [
+  images.clinic,
+  { src: "/crown/IMG_9482.webp", alt: "Reception at Advanced GroHair, Velachery" },
+  { src: "/crown/consultation.jpg", alt: "Doctor consultation at Advanced GroHair, Velachery" },
+  { src: "/crown/surgery.jpg", alt: "Hair transplant surgery at Advanced GroHair, Velachery" },
+];
+
+const clinicAddress ="Second Floor, Block No. 20, Sankaran Avenue, Plot No. 31, Pandian St, Indira Gandhi Nagar, Velachery, Chennai 600042";
 const mapUrl = `https://www.google.com/maps?q=${encodeURIComponent(`Advanced GroHair, ${clinicAddress}`)}&output=embed`;
 
 const trustParagraphs = [
@@ -28,7 +35,7 @@ export default function HairTransplantQuestion() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState(() => questions.map(() => 0));
   const [phase, setPhase] = useState<"question" | "result" | "contact" | "location" | "exit" | "thankyou">("question");
-  const [contact, setContact] = useState({ name: "", phone: "", email: "" });
+  const [contact, setContact] = useState({ name: "", phone: "", email: "", city: "" });
   const [locationAnswer, setLocationAnswer] = useState(0);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
@@ -58,7 +65,7 @@ export default function HairTransplantQuestion() {
   function resetAll() {
     setStep(0);
     setAnswers(questions.map(() => 0));
-    setContact({ name: "", phone: "", email: "" });
+    setContact({ name: "", phone: "", email: "", city: "" });
     setLocationAnswer(0);
     setSaveError("");
     setPhase("question");
@@ -141,7 +148,11 @@ export default function HairTransplantQuestion() {
             {step === 0 && <p className="reveal-in mt-[clamp(10px,2svh,18px)] max-w-[542px] text-[clamp(11px,min(.9vw,1.8svh),14px)] leading-[1.4] text-ink/50" style={revealDelay(questionButtonIndex + 1)}>Results vary by individual. Suitability and graft requirement are confirmed after in-clinic consultation.</p>}
           </form>
           {step === 0 ? <div className="reveal-in relative aspect-[3/2] w-full max-w-[calc((100svh-164px)*1.5)] min-h-0 justify-self-center overflow-hidden border border-ink/10 [@media(max-width:700px)]:h-full [@media(max-width:700px)]:max-h-[30svh] [@media(max-width:700px)]:max-w-[360px] [@media(max-width:700px)]:aspect-auto" style={revealDelay(questionImageIndex)}>
-            <Image src={images.clinic.src} alt={images.clinic.alt} fill priority className="object-cover" sizes="(max-width: 700px) 82vw, 43vw" />
+            <div className="grid h-full w-full grid-cols-2 grid-rows-2 gap-0.5 bg-white">
+              {clinicGallery.map(image => <div key={image.src} className="relative min-h-0 min-w-0 overflow-hidden">
+                <Image src={image.src} alt={image.alt} fill priority className="object-cover" sizes="(max-width: 700px) 41vw, 22vw" />
+              </div>)}
+            </div>
           </div> : step === 1 ? <figure className="reveal-in relative flex aspect-square w-full max-w-[calc(100svh-164px)] min-h-0 flex-col justify-self-center overflow-hidden border border-ink/10 bg-white [@media(max-width:700px)]:h-full [@media(max-width:700px)]:max-h-[30svh] [@media(max-width:700px)]:max-w-[360px] [@media(max-width:700px)]:aspect-auto" style={revealDelay(questionImageIndex)}>
             <div className="relative min-h-0 flex-1">
               <Image src={images.beforeAfter.src} alt={images.beforeAfter.alt} fill priority className="object-contain" sizes="(max-width: 700px) 82vw, 43vw" />
@@ -183,11 +194,15 @@ export default function HairTransplantQuestion() {
                 </div>
               </label>
               <label className="reveal-in block" style={revealDelay(3)}>
+                <span className="mb-1.5 block text-[clamp(12px,1vw,15px)] text-ink/70">City / Area*</span>
+                <input className="w-full border-0 border-b border-ink/25 bg-transparent pb-2 text-[clamp(14px,1.4vw,19px)] text-ink outline-none placeholder:text-ink/36 focus:border-brand" type="text" placeholder="Velachery, Chennai" required autoComplete="address-level2" value={contact.city} onChange={(event) => setContactField("city", event.target.value)} />
+              </label>
+              <label className="reveal-in block" style={revealDelay(4)}>
                 <span className="mb-1.5 block text-[clamp(12px,1vw,15px)] text-ink/70">Email</span>
                 <input className="w-full border-0 border-b border-ink/25 bg-transparent pb-2 text-[clamp(14px,1.4vw,19px)] text-ink outline-none placeholder:text-ink/36 focus:border-brand" type="email" placeholder="name@example.com" value={contact.email} onChange={(event) => setContactField("email", event.target.value)} />
               </label>
             </div>
-            <button className="reveal-in mt-[clamp(16px,3.5svh,32px)] h-[clamp(34px,5svh,44px)] min-w-[60px] cursor-pointer rounded-lg border-0 bg-brand px-4 text-xl font-semibold text-white hover:bg-brand-dark focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink" style={revealDelay(4)} type="submit">OK</button>
+            <button className="reveal-in mt-[clamp(16px,3.5svh,32px)] h-[clamp(34px,5svh,44px)] min-w-[60px] cursor-pointer rounded-lg border-0 bg-brand px-4 text-xl font-semibold text-white hover:bg-brand-dark focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink" style={revealDelay(5)} type="submit">OK</button>
           </form>
         </div> : <>
           <form className="relative min-w-0 w-full" onSubmit={handleLocationSubmit}>

@@ -11,8 +11,8 @@ export async function GET(request: Request) {
   const filters = parseLeadFilters(Object.fromEntries(new URL(request.url).searchParams));
   const leads = await prisma.lead.findMany({ where: leadWhere(filters), orderBy: { createdAt: "desc" } });
   const rows = [
-    ["Date", "Name", "Phone", "Email", ...questions.map(question => question.title.replace(/\*$/, "")), "Comfortable with location"],
-    ...leads.map(lead => [lead.createdAt.toISOString(), lead.name, lead.phone, lead.email ?? "", lead.budget, lead.planning, lead.concern, lead.locationComfortable ? "Yes" : "No"]),
+    ["Date", "Name", "Phone", "Email", "City / Area", ...questions.map(question => question.title.replace(/\*$/, "")), "Comfortable with location"],
+    ...leads.map(lead => [lead.createdAt.toISOString(), lead.name, lead.phone, lead.email ?? "", lead.city ?? "", lead.budget, lead.planning, lead.concern, lead.locationComfortable ? "Yes" : "No"]),
   ];
   const csv = "﻿" + rows.map(row => row.map(cell).join(",")).join("\r\n");
   const date = new Date().toISOString().slice(0, 10);

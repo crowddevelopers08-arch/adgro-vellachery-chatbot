@@ -29,7 +29,7 @@ export function startOfDayInIndia(daysAgo = 0) {
 
 export function leadWhere({ q, range, location }: LeadFilters): Prisma.LeadWhereInput {
   return {
-    ...(q && { OR: [{ name: { contains: q, mode: "insensitive" } }, { phone: { contains: q } }, { email: { contains: q, mode: "insensitive" } }] }),
+    ...(q && { OR: [{ name: { contains: q, mode: "insensitive" } }, { phone: { contains: q } }, { email: { contains: q, mode: "insensitive" } }, { city: { contains: q, mode: "insensitive" } }] }),
     ...(range && { createdAt: { gte: startOfDayInIndia(rangeDays[range]) } }),
     ...(location && { locationComfortable: location === "yes" }),
   };
