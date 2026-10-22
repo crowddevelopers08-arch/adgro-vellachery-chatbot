@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import BrandLogo from "./BrandLogo";
 import ThankYouScreen from "./ThankYouScreen";
 import { revealDelay } from "./reveal";
-import { saveLead } from "@/app/actions";
 import { locationOptions, questions } from "@/lib/form-options";
 
 // TODO: replace these placeholders with approved Advanced GroHair Velachery visuals.
@@ -56,19 +55,6 @@ export default function HairTransplantQuestion() {
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [step, options, phase]);
-  useEffect(() => {
-    if (phase !== "exit") return;
-    const handleKey = (event: KeyboardEvent) => {
-      if (event.ctrlKey && event.key === "Enter") handleExit();
-    };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [phase]);
-  useEffect(() => {
-    if (phase !== "thankyou") return;
-    const timeout = setTimeout(resetAll, 8000);
-    return () => clearTimeout(timeout);
-  }, [phase]);
   function resetAll() {
     setStep(0);
     setAnswers(questions.map(() => 0));
@@ -102,13 +88,18 @@ export default function HairTransplantQuestion() {
     if (saving) return;
     setSaving(true);
     setSaveError("");
-    const result = await saveLead({ ...contact, answers, locationComfortable: locationAnswer === 0 });
+    const error = await fetch("/api/leads", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...contact, answers, locationComfortable: locationAnswer === 0 }),
+    }).then(async response => response.ok ? "" : (await response.json().catch(() => null))?.error ?? "Something went wrong. Please try again or call us.", () => "Network error. Please check your connection and try again.");
     setSaving(false);
-    if (!result.ok) { setSaveError(result.error); return; }
+    if (error) { setSaveError(error); return; }
     setPhase(locationAnswer === 1 ? "exit" : "thankyou");
   }
+  // The lead was already saved on the location step; this just closes the flow.
   function handleExit() {
-    // TODO: wire up final exit action (e.g. close the widget / navigate away) once the destination is defined.
+    setPhase("thankyou");
   }
   if (phase === "exit") {
     return (
@@ -117,10 +108,7 @@ export default function HairTransplantQuestion() {
         <div className="relative max-w-[620px]">
           <span className="absolute top-0 -left-7 font-serif text-[34px] leading-none text-brand" aria-hidden="true">&ldquo;</span>
           <p className="reveal-in text-[clamp(18px,2.2vw,32px)] leading-[1.35] tracking-[-.3px]" style={revealDelay(0)}>If you’re not comfortable with the clinic location in Velachery, Chennai, you may exit the form and choose not to proceed further.</p>
-          <div className="mt-[clamp(20px,4svh,36px)] flex items-center gap-3">
-            <button type="button" onClick={handleExit} className="reveal-in h-[46px] cursor-pointer rounded-lg border-0 bg-brand px-6 text-lg font-bold text-white hover:bg-brand-dark focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink" style={revealDelay(1)}>Submit</button>
-            <span className="reveal-in text-sm text-ink/65" style={revealDelay(2)}>press <b className="font-bold text-ink">Ctrl</b> + <b className="font-bold text-ink">Enter</b> ↵</span>
-          </div>
+          <button type="button" onClick={handleExit} className="reveal-in mt-[clamp(20px,4svh,36px)] h-[46px] cursor-pointer rounded-lg border-0 bg-brand px-6 text-lg font-bold text-white hover:bg-brand-dark focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink" style={revealDelay(1)}>Submit</button>
         </div>
         <nav className="fixed right-[7px] bottom-3 flex gap-0.5 [&_button]:grid [&_button]:h-[35px] [&_button]:w-[34px] [&_button]:cursor-pointer [&_button]:place-items-center [&_button]:border-0 [&_button]:bg-brand [&_button]:p-1.5 [&_button]:text-white [&_button:first-child]:rounded-l-[9px] [&_button:last-child]:rounded-r-[9px] [&_button:disabled]:cursor-default [&_button:disabled]:bg-brand/25 [&_button:disabled]:text-white [&_button:focus-visible]:outline-2 [&_button:focus-visible]:outline-offset-4 [&_button:focus-visible]:outline-ink [&_svg]:w-[23px] [&_svg]:fill-none [&_svg]:stroke-current [&_svg]:stroke-2 [&_svg]:[stroke-linecap:round] [&_svg]:[stroke-linejoin:round]" aria-label="Question navigation">
           <button type="button" onClick={() => setPhase("location")} aria-label="Previous question"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 15 7-7 7 7" /></svg></button>
@@ -130,7 +118,7 @@ export default function HairTransplantQuestion() {
     );
   }
   if (phase === "thankyou") {
-    return <ThankYouScreen name={contact.name} phone={contact.phone} />;
+    return <ThankYouScreen name={contact.name} phone={contact.phone} locationComfortable={locationAnswer === 0} onHome={resetAll} />;
   }
   return (
     <main key={phase === "question" ? `question-${step}` : phase} className="relative isolate h-svh overflow-hidden bg-white text-ink">
