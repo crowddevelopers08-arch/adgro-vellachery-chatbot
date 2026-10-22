@@ -11,8 +11,7 @@ datasource db {
 model Lead {
   id                  String   @id @default(cuid())
   createdAt           DateTime @default(now())
-  firstName           String
-  lastName            String?
+  name                String
   phone               String
   email               String?
   budget              String

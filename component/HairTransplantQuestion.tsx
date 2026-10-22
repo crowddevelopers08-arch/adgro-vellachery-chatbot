@@ -20,7 +20,7 @@ const mapUrl = `https://www.google.com/maps?q=${encodeURIComponent(`Advanced Gro
 
 const trustParagraphs = [
   // TODO: fill in the doctor's name, qualification and years of experience.
-  "At Advanced GroHair Velachery, your procedure is planned by [Doctor name, qualification], with [X]+ years of experience in hair restoration.",
+  "At Advanced GroHair Velachery, your procedure is planned by [Doctor name, qualification], with 10+ years of experience in hair restoration.",
   "Your plan includes unlimited follicles (within your safe donor limit) and 6 months of free maintenance after the procedure.",
   "Would you like a consultation to check your hair loss grade and eligibility?",
 ];
@@ -29,7 +29,7 @@ export default function HairTransplantQuestion() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState(() => questions.map(() => 0));
   const [phase, setPhase] = useState<"question" | "result" | "contact" | "location" | "exit" | "thankyou">("question");
-  const [contact, setContact] = useState({ firstName: "", lastName: "", phone: "", email: "" });
+  const [contact, setContact] = useState({ name: "", phone: "", email: "" });
   const [locationAnswer, setLocationAnswer] = useState(0);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
@@ -72,7 +72,7 @@ export default function HairTransplantQuestion() {
   function resetAll() {
     setStep(0);
     setAnswers(questions.map(() => 0));
-    setContact({ firstName: "", lastName: "", phone: "", email: "" });
+    setContact({ name: "", phone: "", email: "" });
     setLocationAnswer(0);
     setSaveError("");
     setPhase("question");
@@ -130,7 +130,7 @@ export default function HairTransplantQuestion() {
     );
   }
   if (phase === "thankyou") {
-    return <ThankYouScreen firstName={contact.firstName} phone={contact.phone} />;
+    return <ThankYouScreen name={contact.name} phone={contact.phone} />;
   }
   return (
     <main key={phase === "question" ? `question-${step}` : phase} className="relative isolate h-svh overflow-hidden bg-white text-ink">
@@ -180,14 +180,10 @@ export default function HairTransplantQuestion() {
             <p className="reveal-in mb-[clamp(16px,4svh,36px)] text-[clamp(17px,min(1.76vw,3.5svh),30px)] leading-[1.3] tracking-[-.4px]" style={revealDelay(0)}>Please enter your full name and contact info.*</p>
             <div className="flex w-full max-w-[446px] flex-col gap-[clamp(14px,2.6svh,26px)] [@media(max-width:900px)]:max-w-none">
               <label className="reveal-in block" style={revealDelay(1)}>
-                <span className="mb-1.5 block text-[clamp(12px,1vw,15px)] text-ink/70">First name*</span>
-                <input className="w-full border-0 border-b border-ink/25 bg-transparent pb-2 text-[clamp(14px,1.4vw,19px)] text-ink outline-none placeholder:text-ink/36 focus:border-brand" type="text" placeholder="Karthik" required value={contact.firstName} onChange={(event) => setContactField("firstName", event.target.value)} />
+                <span className="mb-1.5 block text-[clamp(12px,1vw,15px)] text-ink/70">Name*</span>
+                <input className="w-full border-0 border-b border-ink/25 bg-transparent pb-2 text-[clamp(14px,1.4vw,19px)] text-ink outline-none placeholder:text-ink/36 focus:border-brand" type="text" placeholder="Karthik Kumar" required autoComplete="name" value={contact.name} onChange={(event) => setContactField("name", event.target.value)} />
               </label>
               <label className="reveal-in block" style={revealDelay(2)}>
-                <span className="mb-1.5 block text-[clamp(12px,1vw,15px)] text-ink/70">Last name</span>
-                <input className="w-full border-0 border-b border-ink/25 bg-transparent pb-2 text-[clamp(14px,1.4vw,19px)] text-ink outline-none placeholder:text-ink/36 focus:border-brand" type="text" placeholder="Kumar" value={contact.lastName} onChange={(event) => setContactField("lastName", event.target.value)} />
-              </label>
-              <label className="reveal-in block" style={revealDelay(3)}>
                 <span className="mb-1.5 block text-[clamp(12px,1vw,15px)] text-ink/70">WhatsApp / Phone number*</span>
                 <div className="flex items-center gap-2 border-b border-ink/25 pb-2 focus-within:border-brand">
                   <span className="flex shrink-0 items-center gap-1 text-[clamp(14px,1.4vw,19px)]" aria-hidden="true">
@@ -198,12 +194,12 @@ export default function HairTransplantQuestion() {
                   <input className="min-w-0 flex-1 border-0 bg-transparent text-[clamp(14px,1.4vw,19px)] text-ink outline-none placeholder:text-ink/36" type="tel" placeholder="98765 43210" required value={contact.phone} onChange={(event) => setContactField("phone", event.target.value)} />
                 </div>
               </label>
-              <label className="reveal-in block" style={revealDelay(4)}>
+              <label className="reveal-in block" style={revealDelay(3)}>
                 <span className="mb-1.5 block text-[clamp(12px,1vw,15px)] text-ink/70">Email</span>
                 <input className="w-full border-0 border-b border-ink/25 bg-transparent pb-2 text-[clamp(14px,1.4vw,19px)] text-ink outline-none placeholder:text-ink/36 focus:border-brand" type="email" placeholder="name@example.com" value={contact.email} onChange={(event) => setContactField("email", event.target.value)} />
               </label>
             </div>
-            <button className="reveal-in mt-[clamp(16px,3.5svh,32px)] h-[clamp(34px,5svh,44px)] min-w-[60px] cursor-pointer rounded-lg border-0 bg-brand px-4 text-xl font-semibold text-white hover:bg-brand-dark focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink" style={revealDelay(5)} type="submit">OK</button>
+            <button className="reveal-in mt-[clamp(16px,3.5svh,32px)] h-[clamp(34px,5svh,44px)] min-w-[60px] cursor-pointer rounded-lg border-0 bg-brand px-4 text-xl font-semibold text-white hover:bg-brand-dark focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink" style={revealDelay(4)} type="submit">OK</button>
           </form>
         </div> : <>
           <form className="relative min-w-0 w-full" onSubmit={handleLocationSubmit}>

@@ -4,8 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { questions } from "@/lib/form-options";
 
 export type LeadInput = {
-  firstName: string;
-  lastName: string;
+  name: string;
   phone: string;
   email: string;
   answers: number[];
@@ -16,14 +15,13 @@ const clean = (value: unknown, max: number) => typeof value === "string" ? value
 
 // Public endpoint: anyone can POST here, so validate everything before saving.
 export async function saveLead(input: LeadInput): Promise<{ ok: true } | { ok: false; error: string }> {
-  const firstName = clean(input?.firstName, 80);
-  const lastName = clean(input?.lastName, 80);
+  const name = clean(input?.name, 120);
   const phone = clean(input?.phone, 20);
   const email = clean(input?.email, 120);
   const answers = Array.isArray(input?.answers) ? input.answers : [];
   const digits = phone.replace(/\D/g, "");
 
-  if (!firstName) return { ok: false, error: "Please enter your first name." };
+  if (!name) return { ok: false, error: "Please enter your name." };
   if (digits.length < 10 || digits.length > 13 || !/^[+\d\s()-]+$/.test(phone)) return { ok: false, error: "Please enter a valid phone number." };
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { ok: false, error: "Please enter a valid email address." };
   if (questions.some((question, i) => !Number.isInteger(answers[i]) || !question.options[answers[i]])) return { ok: false, error: "Please answer all the questions." };
@@ -31,8 +29,7 @@ export async function saveLead(input: LeadInput): Promise<{ ok: true } | { ok: f
   try {
     await prisma.lead.create({
       data: {
-        firstName,
-        lastName: lastName || null,
+        name,
         phone,
         email: email || null,
         budget: questions[0].options[answers[0]],

@@ -11,6 +11,46 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "Advanced GroHair Velachery | Hair Transplant Consultation",
   description: "Hair transplant at Advanced GroHair, Velachery: ₹1,29,000 with unlimited follicles and 6 months of free maintenance.",
+
+    icons: {
+    icon: [
+      {
+        url: "/ambatur-logo.jpg",
+        sizes: "any",
+      },
+      {
+        url: "/ambatur-logo.jpg",
+        sizes: "16x16",
+        type: "image/png",
+      },
+      {
+        url: "/ambatur-logo.jpg",
+        sizes: "32x32",
+        type: "image/png",
+      },
+    ],
+    apple: [
+      {
+        url: "/ambatur-logo.jpg",
+        sizes: "180x180",
+        type: "image/png",
+      },
+    ],
+    other: [
+      {
+        rel: "icon",
+        url: "/ambatur-logo.jpg",
+        sizes: "192x192",
+        type: "image/png",
+      },
+      {
+        rel: "icon",
+        url: "/ambatur-logo.jpg",
+        sizes: "512x512",
+        type: "image/png",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

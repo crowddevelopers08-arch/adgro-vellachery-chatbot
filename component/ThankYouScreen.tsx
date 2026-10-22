@@ -3,12 +3,12 @@
 import BrandLogo from "./BrandLogo";
 import { revealDelay } from "./reveal";
 
-export default function ThankYouScreen({ firstName, phone }: { firstName: string; phone: string }) {
+export default function ThankYouScreen({ name, phone }: { name: string; phone: string }) {
   return (
     <main className="relative isolate flex min-h-svh items-center justify-center overflow-hidden bg-white px-[7vw] py-16 text-center text-ink">
       <BrandLogo />
       <div className="max-w-[560px]">
-        <h1 className="reveal-in text-[clamp(28px,4vw,48px)] leading-[1.15] font-bold" style={revealDelay(0)}>Thank you{firstName ? `, ${firstName}` : ""}!</h1>
+        <h1 className="reveal-in text-[clamp(28px,4vw,48px)] leading-[1.15] font-bold" style={revealDelay(0)}>Thank you{name ? `, ${name}` : ""}!</h1>
         <p className="reveal-in mt-[clamp(10px,2svh,18px)] text-[clamp(15px,1.6vw,22px)] leading-[1.4] text-ink/80" style={revealDelay(1)}>Our Velachery team will call you shortly{phone ? <> on <b className="font-semibold text-ink">{phone}</b></> : ""} to confirm your consultation slot.</p>
         <p className="reveal-in mt-[clamp(22px,4svh,36px)] flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[clamp(13px,1.15vw,17px)] text-ink/70" style={revealDelay(2)}>
           <span>Phone: <a className="text-brand hover:underline" href="tel:+918390856789">+91 83908 56789</a></span>
