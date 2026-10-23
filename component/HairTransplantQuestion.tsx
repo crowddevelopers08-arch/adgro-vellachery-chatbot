@@ -98,7 +98,7 @@ export default function HairTransplantQuestion() {
     const error = await fetch("/api/leads", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...contact, answers, locationComfortable: locationAnswer === 0 }),
+      body: JSON.stringify({ ...contact, pageUrl: window.location.href, answers, locationComfortable: locationAnswer === 0 }),
     }).then(async response => response.ok ? "" : (await response.json().catch(() => null))?.error ?? "Something went wrong. Please try again or call us.", () => "Network error. Please check your connection and try again.");
     setSaving(false);
     if (error) { setSaveError(error); return; }
